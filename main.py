@@ -2,10 +2,7 @@ import flet as ft
 from src.views.home_view import HomeView
 
 async def main(page: ft.Page):
-    # Config móvil
-    page.window_width = 390
-    page.window_height = 844
-    page.window_resizable = False
+    # Padding Recomendado
     page.padding = 20
 
     # Barra superior
@@ -23,3 +20,4 @@ ft.run(
     assets_dir="assets"
 
 )
+
