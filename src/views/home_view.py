@@ -47,6 +47,7 @@ class HomeView:
     # 🔹 Overlay 2
     def build_image_overlay(self, close_callback):
         return ft.Column(
+            scroll="auto",
             tight=True,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             controls=[
