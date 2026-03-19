@@ -1,4 +1,5 @@
 import flet as ft
+from src.components.image_picker_service import ImagePickerService
 from src.components.bottom_nav import BottomNav
 from src.components.overlay_base import OverlayBase
 
@@ -7,20 +8,33 @@ class HomeView:
     def __init__(self, page: ft.Page):
         self.page = page
         self.page.navigation_bar = BottomNav(self.page).build()
-
+#-------------------------------------------------------------------------------------
         # Crear overlays 
         self.overlay_info = OverlayBase(page, None)
         self.overlay_image = OverlayBase(page, None)
 
         # Construir el contenido con el Hide
-        self.overlay_info.container.content.content = self.build_info_overlay(
+        self.overlay_info.container.content = self.build_info_overlay(
             self.overlay_info.hide
         )
 
-        self.overlay_image.container.content.content = self.build_image_overlay(
+        self.overlay_image.container.content = self.build_image_overlay(
             self.overlay_image.hide
         )
+#-------------------------------------------------------------------------------------
+        # Servicio de selección de imagen
+        self.image_service = ImagePickerService(page)
 
+        # Vista previa de imagen seleccionada
+        self.img_preview = ft.Image(
+            src="",
+            width=300,
+            height=300,
+            fit="contain",
+            visible=False
+        )
+#-------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------
     # 🔹 Overlay 1
     def build_info_overlay(self, close_callback):
         return ft.Column(
@@ -47,7 +61,6 @@ class HomeView:
     # 🔹 Overlay 2
     def build_image_overlay(self, close_callback):
         return ft.Column(
-            scroll="auto",
             tight=True,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             controls=[
@@ -67,12 +80,27 @@ class HomeView:
                 )
             ]
         )
+#-------------------------------------------------------------------------------------
+    # 🔹 Función para seleccionar imagen
+    async def pick_image(self, e):
+        result = await self.image_service.pick_image()
 
+        if result:
+            self.img_preview.src = result
+            self.img_preview.visible = True
+
+            print("Nombre:", self.image_service.file_name)
+            print("Base64 listo para guardar")
+
+            self.page.update()
+#-------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------
     # 🔹 Vista principal
     def build(self):
         main_content = ft.Container(
             expand=True,
             content=ft.Column( #Main Column
+                scroll="auto",
                 spacing=20,
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 controls=[
@@ -91,6 +119,11 @@ class HomeView:
                             ),
                         ]
                     ),
+                    ft.ElevatedButton(
+                        "Seleccionar Imagen",
+                        on_click=self.pick_image
+                    ),
+                    self.img_preview
                 ]
             )
         )
