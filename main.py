@@ -11,7 +11,7 @@ async def main(page: ft.Page):
 
     # Barra de navegación fija en la parte superior
     page.appbar = ft.AppBar(
-        title=ft.Text("Flet Mobile"),
+        title=ft.Text("Flet App"),
         center_title=True
     )
 
